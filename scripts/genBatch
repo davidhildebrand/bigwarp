@@ -1,0 +1,27 @@
+#!/bin/bash
+# Usage:
+# genBatch landmarks_file moving_image_dir template_image_file destination_dir > batch_commands_text_file
+# 
+#   then, the commands in the resulting <batch_commands_text_file> can be run in parallel using:
+#      parallel -j max_jobs --load max_load < batch_commands_text_file &> log_file
+
+dimensions=3
+landmarks_file=$1
+moving_dir=$2
+template_file=$3
+destination_dir=$4
+
+for moving_file in $(ls -d ${moving_dir}*_BeforeWarp.tif); do
+    moving_file_stripped=${moving_file##*\/}
+    landmarks_file_stripped=${landmarks_file##*\/}
+    template_file_stripped=${template_file##*\/}
+    destination_file=${moving_file_stripped//BeforeWarp/1200nmIso_Warped}
+    destination_path=$destination_dir$destination_file
+    #echo "transforming image $moving_file_stripped"
+    #echo "  landmarks from $landmarks_file_stripped"
+    #echo "  matching template $template_file_stripped"
+    #echo "  saving to $destination_path"
+
+    #bash ./transformBatch $dimensions $landmarks_file $moving_file $template_file $destination_path
+    echo "bash /home/davidh/bigwarp/scripts/transformBatch $dimensions $landmarks_file $moving_file $template_file $destination_path"
+done
